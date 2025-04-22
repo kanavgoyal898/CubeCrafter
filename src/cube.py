@@ -1,28 +1,78 @@
+import math
 import random
 
 class Cube:
     """
-    A class representing a Rubik's Cube with customizable size and initial face colors.
-
+    A class representing a Rubik's Cube with customizable size, initial face colors, and state.
+    
     Attributes:
-        n (int): Dimension of the cube (e.g., 3 for 3x3).
-        colors (list): List of color initials for each face.
-        faces (list): List of face names in standard cube orientation.
-        config (list): 3D list storing color configuration for each face.
+        n (int): The dimension of the cube (e.g., 3 for a 3x3 cube).
+        colors (list): A list of color initials for each face of the cube (default is ['W', 'G', 'R', 'B', 'O', 'Y']).
+        faces (list): A list of face names representing the six faces of the cube in standard orientation.
+        config (list): A 3D list representing the color configuration for each face of the cube.
+
+    Methods:
+        __str__(): Returns a string representation of the cube's face configurations.
+        reset(): Resets the cube to its initial state, with uniform colors on each face.
+        is_solved(): Checks if the cube is solved (i.e., all faces are a single color).
+        shuffle(lower_limit, upper_limit): Shuffles the cube by performing random rotations within specified move limits.
+        horizontal_rotate(row, direction): Performs a horizontal rotation of a specified row across the lateral faces.
+        vertical_rotate(col, direction): Performs a vertical rotation of a specified column across the lateral faces.
+        side_rotate(dpt, direction): Performs a side rotation of a specified depth across the lateral faces.
     """
 
-    def __init__(self, n=3):
+    def __init__(self, n=3, colors=['W', 'G', 'R', 'B', 'O', 'Y'], state=None):
         """
-        Initializes the Cube with uniform color configuration for each face.
+    Initializes the Rubik's Cube with a given size, color scheme, and an optional initial state.
+    
+    The cube is represented as a 3D list, with each face consisting of a grid of colors. If an initial
+    state is provided, it must be a list containing 6 * n * n elements, where each group of n * n elements
+    corresponds to one face of the cube. The cube is initialized in a solved state by default.
 
-        Args:
-            n (int): Size of each face (default is 3 for a standard 3x3 cube).
-        """
+    Args:
+        n (int): The size of the cube (i.e., the number of rows/columns per face). Default is 3 (3x3 cube).
+        colors (list): A list of 6 color initials representing the colors for each face of the cube.
+                       Default is ['W', 'G', 'R', 'B', 'O', 'Y'], corresponding to white, green, red,
+                       blue, orange, and yellow.
+        state (list or str, optional): A list or str containing 6 * n * n elements representing the initial configuration
+                                    of the cube. If None, the cube is initialized to a solved state with uniform
+                                    color on each face. If provided, the state must be a valid configuration.
+
+    Raises:
+        AssertionError: If `state` is provided but its length is not a multiple of 6 * n * n.
+        ValueError: If `state` contains invalid color values (colors not in the provided `colors` list).
+    """
         
-        self.n = n
-        self.colors = ['W', 'G', 'R', 'B', 'O', 'Y']
+        self.config = [[[]]]
         self.faces = ['Up', 'Left', 'Front', 'Right', 'Back', 'Down']
-        self.reset()
+
+        if state is None:
+            self.n = n
+            self.colors = colors
+            self.reset()
+        else:
+            assert len(state) % 6 == 0, "State must be a multiple of 6."
+            self.n = int(math.sqrt(len(state)/6))
+
+            self.colors = []
+            if isinstance(colors, list):
+                state = ''.join(state)
+            if isinstance(colors, str):
+                state = state.upper()
+            
+            for i, s in enumerate(state):
+                s = s.upper()
+                if s not in self.colors:
+                    self.colors.append(s)
+                self.config[-1][-1].append(s)
+                if len(self.config[-1][-1]) == self.n and len(self.config[-1]) < self.n:
+                    self.config[-1].append([])
+                elif len(self.config[-1][-1]) == self.n and len(self.config[-1]) == self.n and i < len(state) - 1:
+                    self.config.append([[]])
+
+            if colors is not None:
+                if colors != self.colors:
+                    raise ValueError("State colors do not match provided colors.")
 
     def __str__(self):
         """
