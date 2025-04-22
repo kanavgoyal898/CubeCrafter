@@ -62,6 +62,11 @@ class Cube:
         Performs a horizontal rotation of the specified row across the four lateral faces.
         If the row is the top or bottom, the Up or Down face is rotated accordingly.
 
+        Time Complexity:
+            O(1)
+        Space Complexity:
+            O(n*n)
+
         Args:
             row (int): The index of the row to rotate (0-based).
             direction (str): Direction of rotation, either 'left' or 'right'.
@@ -99,6 +104,11 @@ class Cube:
         """
         Performs a vertical rotation of the specified column across the four lateral faces.
         If the column is the left or right, the Left or Right face is rotated accordingly.
+
+        Time Complexity:
+            O(n)
+        Space Complexity:
+            O(n*n)
 
         Args:
             col (int): The index of the column to rotate (0-based).
@@ -140,6 +150,11 @@ class Cube:
         Performs a side rotation of the specified depth across the four lateral faces.
         If the depth is the front or back, the Front or Back face is rotated accordingly.
 
+        Time Complexity:
+            O(n)
+        Space Complexity:
+            O(n*n)
+
         Args:
             dpt (int): The index of the depth to rotate (0-based).
             direction (str): Direction of rotation, either 'positive' or 'negative'.
@@ -174,14 +189,3 @@ class Cube:
             if dpt == self.n - 1:
                 # clockwise rotation for the back face
                 self.config[4] = [list(row) for row in zip(*reversed(self.config[4]))]
-
-cube = Cube()
-print(f"CUBE CONFIGURATION: \n{cube}")
-
-for face in range(cube.n):
-    for direction in ['positive', 'negative']:
-        cube.side_rotate(face, direction)
-        print(f"===========================")
-        print(f"{direction.upper()} ROTATION ON FACE {face}: \n{cube}")
-
-        cube.reset()
