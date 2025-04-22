@@ -57,6 +57,49 @@ class Cube:
         # self.config[2] = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']]  # Front
         # self.config[4] = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']]  # Back
 
+    def is_solved(self):
+        """
+        Determines if the Rubik's Cube is solved by checking if each face consists of a single color.
+        
+        Returns:
+            bool: True if the Rubik's Cube is solved (all faces have a single color), 
+                  False otherwise.
+        """
+
+        def flatten(lst):
+            """
+            Flattens a nested list structure into a set of unique elements.
+            
+            This helper function takes a list (which may contain nested lists) and flattens it
+            into a set of unique elements. It is used to check if all elements on a face are the
+            same color.
+            
+            Args:
+                lst (list): A list which may contain nested lists.
+                
+            Returns:
+                set: A set containing the unique elements found in the list.
+            """
+
+            result = set()
+
+            for ls in lst:
+                if isinstance(ls, list):
+                    result.update(flatten(ls))
+                else:
+                    result.add(ls)
+
+            return result
+        
+        isSolved = True
+
+        for face in self.config:
+            if len(flatten(face)) != 1:
+                isSolved = False
+                break
+
+        return isSolved
+
     def horizontal_rotate(self, row, direction):
         """
         Performs a horizontal rotation of the specified row across the four lateral faces.
