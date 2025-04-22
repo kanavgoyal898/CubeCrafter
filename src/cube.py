@@ -1,3 +1,5 @@
+import random
+
 class Cube:
     """
     A class representing a Rubik's Cube with customizable size and initial face colors.
@@ -99,6 +101,52 @@ class Cube:
                 break
 
         return isSolved
+    
+    def shuffle(self, lower_limit, upper_limit):
+        """
+        Shuffles the Rubik's Cube by performing a random series of rotations.
+
+        Args:
+            lower_limit (int): The minimum number of moves to shuffle the cube.
+            upper_limit (int): The maximum number of moves to shuffle the cube.
+
+        Raises:
+            ValueError: 
+                - If `lower_limit` or `upper_limit` is negative.
+                - If `lower_limit` is greater than `upper_limit`.
+        """
+        
+        if lower_limit < 0 or upper_limit < 0:
+            raise ValueError("Limits must be non-negative.")
+        if lower_limit > upper_limit:
+            raise ValueError("Lower limit must be less than or equal to upper limit.")
+        
+
+        moves_count = random.randint(lower_limit, upper_limit)
+
+        actions = [
+            ('horizontal', 'left'),
+            ('horizontal', 'right'),
+            ('vertical', 'up'),
+            ('vertical', 'down'),
+            ('side', 'positive'),
+            ('side', 'negative')
+        ]
+
+        for _ in range(moves_count):
+            action = random.choice(actions)
+
+            i = random.randint(0, self.n - 1)
+
+            twist = action[0]
+            move = action[1]
+
+            if twist == 'horizontal':
+                self.horizontal_rotate(i, move)
+            if twist == 'vertical':
+                self.vertical_rotate(i, move)
+            if twist == 'side':
+                self.side_rotate(i, move)
 
     def horizontal_rotate(self, row, direction):
         """
