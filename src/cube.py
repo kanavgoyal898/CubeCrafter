@@ -53,6 +53,10 @@ class Cube:
         # self.config[1] = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']]  # Left
         # self.config[3] = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']]  # Right
 
+        # side rotate testing
+        # self.config[2] = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']]  # Front
+        # self.config[4] = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']]  # Back
+
     def horizontal_rotate(self, row, direction):
         """
         Performs a horizontal rotation of the specified row across the four lateral faces.
@@ -131,13 +135,53 @@ class Cube:
                 # counter-clockwise rotation for the right column
                 self.config[3] = [list(row) for row in zip(*self.config[3])][::-1]
 
+    def side_rotate(self, dpt, direction):
+        """
+        Performs a side rotation of the specified depth across the four lateral faces.
+        If the depth is the front or back, the Front or Back face is rotated accordingly.
+
+        Args:
+            dpt (int): The index of the depth to rotate (0-based).
+            direction (str): Direction of rotation, either 'positive' or 'negative'.
+
+        Raises:
+            ValueError: If depth is out of bounds or direction is invalid.
+        """
+
+        if dpt < 0 or dpt >= self.n:
+            raise ValueError("Depth index out of bounds.")
+        if direction not in ['positive', 'negative']:
+            raise ValueError("Direction must be 'positive' or 'negative'.")
+        
+        face_1, face_2, face_3, face_4 = self.config[0], self.config[3], self.config[5], self.config[1]
+
+        if direction == 'positive':
+            for i in range(self.n):
+                self.config[0][-(dpt+1)][i], self.config[3][-(dpt+1)][i], self.config[5][-(dpt+1)][i], self.config[1][-(dpt+1)][i] = face_4[-(dpt+1)][i], face_1[-(dpt+1)][i], face_2[-(dpt+1)][i], face_3[-(dpt+1)][i]
+            if dpt == 0:
+                # clockwise rotation for the front face
+                self.config[2] = [list(row) for row in zip(*reversed(self.config[2]))]
+            if dpt == self.n - 1:
+                # counter-clockwise rotation for the back face
+                self.config[4] = [list(row) for row in zip(*self.config[4])][::-1]
+    
+        if direction == 'negative':
+            for i in range(self.n):
+                self.config[0][-(dpt+1)][i], self.config[3][-(dpt+1)][i], self.config[5][-(dpt+1)][i], self.config[1][-(dpt+1)][i] = face_2[-(dpt+1)][i], face_3[-(dpt+1)][i], face_4[-(dpt+1)][i], face_1[-(dpt+1)][i] 
+            if dpt == 0:
+                # counter-clockwise rotation for the front face
+                self.config[2] = [list(row) for row in zip(*self.config[2])][::-1]
+            if dpt == self.n - 1:
+                # clockwise rotation for the back face
+                self.config[4] = [list(row) for row in zip(*reversed(self.config[4]))]
+
 cube = Cube()
 print(f"CUBE CONFIGURATION: \n{cube}")
 
-for col in range(cube.n):
-    for direction in ['up', 'down']:
-        cube.vertical_rotate(col, direction)
+for face in range(cube.n):
+    for direction in ['positive', 'negative']:
+        cube.side_rotate(face, direction)
         print(f"===========================")
-        print(f"{direction.upper()} ROTATION ON COLUMN {col}: \n{cube}")
+        print(f"{direction.upper()} ROTATION ON FACE {face}: \n{cube}")
 
         cube.reset()
