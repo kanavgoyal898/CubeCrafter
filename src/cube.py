@@ -71,7 +71,7 @@ class Cube:
                     self.config.append([[]])
 
             if colors is not None:
-                if colors != self.colors:
+                if set(colors) != set(self.colors):
                     raise ValueError("State colors do not match provided colors.")
 
     def __str__(self):
