@@ -109,7 +109,45 @@ class Cube:
         # self.config[2] = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']]  # Front
         # self.config[4] = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']]  # Back
 
-    def is_solved(self):
+    def stringify(self):
+        """
+        Converts the cube's configuration into a string representation.
+
+        Returns:
+            str: A string representation of the cube's configuration.
+        """
+
+        def flatten(lst):
+            """
+            Flattens a nested list structure into a list of elements.
+            
+            This helper function takes a list (which may contain nested lists) and flattens it
+            into a list of elements. It is used to convert the cube's configuration into a string 
+            format.
+            
+            Args:
+                lst (list): A list which may contain nested lists.
+                
+            Returns:
+                list: A list containing the state found in the list.
+            """
+
+            result = []
+
+            for ls in lst:
+                if isinstance(ls, list):
+                    result.extend(flatten(ls))
+                else:
+                    result.append(ls)
+            
+            return result
+        
+        result = flatten(self.config)
+        result = ''.join(result)
+        
+        return result
+
+    def complete(self):
         """
         Determines if the Rubik's Cube is solved by checking if each face consists of a single color.
         
