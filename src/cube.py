@@ -21,7 +21,7 @@ class Cube:
         side_rotate(dpt, direction): Performs a side rotation of a specified depth across the lateral faces.
     """
 
-    def __init__(self, n=3, colors=['W', 'G', 'R', 'B', 'O', 'Y'], state=None):
+    def __init__(self, n=3, colors=['W', 'G', 'O', 'B', 'R', 'Y'], state=None):
         """
     Initializes the Rubik's Cube with a given size, color scheme, and an optional initial state.
     
@@ -32,7 +32,7 @@ class Cube:
     Args:
         n (int): The size of the cube (i.e., the number of rows/columns per face). Default is 3 (3x3 cube).
         colors (list): A list of 6 color initials representing the colors for each face of the cube.
-                       Default is ['W', 'G', 'R', 'B', 'O', 'Y'], corresponding to white, green, red,
+                       Default is ['W', 'G', 'O', 'B', 'R', 'Y'], corresponding to white, green, red,
                        blue, orange, and yellow.
         state (list or str, optional): A list or str containing 6 * n * n elements representing the initial configuration
                                     of the cube. If None, the cube is initialized to a solved state with uniform
@@ -43,8 +43,17 @@ class Cube:
         ValueError: If `state` contains invalid color values (colors not in the provided `colors` list).
     """
         
+        self.state = state
         self.config = [[[]]]
         self.faces = ['Up', 'Left', 'Front', 'Right', 'Back', 'Down']
+        self.actions = [
+                ('horizontal', 'left'), 
+                ('horizontal', 'right'), 
+                ('vertical', 'up'), 
+                ('vertical', 'down'), 
+                ('side', 'positive'), 
+                ('side', 'negative')
+            ]
 
         if state is None:
             self.n = n
@@ -198,6 +207,9 @@ class Cube:
             lower_limit (int): The minimum number of moves to shuffle the cube.
             upper_limit (int): The maximum number of moves to shuffle the cube.
 
+        Returns:
+            moves (list): A list of tuples representing the moves made during the shuffle.
+
         Raises:
             ValueError: 
                 - If `lower_limit` or `upper_limit` is negative.
@@ -221,6 +233,8 @@ class Cube:
             ('side', 'negative')
         ]
 
+        moves = []
+
         for _ in range(moves_count):
             action = random.choice(actions)
 
@@ -235,6 +249,12 @@ class Cube:
                 self.vertical_rotate(i, move)
             if twist == 'side':
                 self.side_rotate(i, move)
+
+            moves.append((twist, i, move))
+
+        self.state = self.stringify()
+
+        return moves
 
     def horizontal_rotate(self, row, direction):
         """
@@ -278,6 +298,8 @@ class Cube:
             if row == self.n - 1:
                 # clockwise rotation for the bottom row
                 self.config[5] = ([list(row) for row in zip(*reversed(self.config[5]))])
+
+        self.state = self.stringify()
 
     def vertical_rotate(self, col, direction):
         """
@@ -324,6 +346,8 @@ class Cube:
                 # counter-clockwise rotation for the right column
                 self.config[3] = [list(row) for row in zip(*self.config[3])][::-1]
 
+        self.state = self.stringify()
+
     def side_rotate(self, dpt, direction):
         """
         Performs a side rotation of the specified depth across the four lateral faces.
@@ -335,7 +359,7 @@ class Cube:
             O(n*n)
 
         Args:
-            dpt (int): The index of the depth to rotate (0-based).
+            dpt (int): The depth index to rotate (0-based).
             direction (str): Direction of rotation, either 'positive' or 'negative'.
 
         Raises:
@@ -368,3 +392,5 @@ class Cube:
             if dpt == self.n - 1:
                 # clockwise rotation for the back face
                 self.config[4] = [list(row) for row in zip(*reversed(self.config[4]))]
+        
+        self.state = self.stringify()
