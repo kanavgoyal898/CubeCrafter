@@ -250,7 +250,7 @@ class Cube:
             if twist == 'side':
                 self.side_rotate(i, move)
 
-            moves.append((twist, i, move))
+            moves.append(((twist, i, move), self.state))
 
         self.state = self.stringify()
 
