@@ -245,9 +245,9 @@ class Cube:
 
             if twist == 'horizontal':
                 self.horizontal_rotate(i, move)
-            if twist == 'vertical':
+            elif twist == 'vertical':
                 self.vertical_rotate(i, move)
-            if twist == 'side':
+            elif twist == 'side':
                 self.side_rotate(i, move)
 
             moves.append(((twist, i, move), self.state))
@@ -286,16 +286,16 @@ class Cube:
             if row == 0:
                 # clockwise rotation for the top row
                 self.config[0] = [list(row) for row in zip(*reversed(self.config[0]))]
-            if row == self.n - 1:
+            elif row == self.n - 1:
                 # counter-clockwise rotation for the bottom row
                 self.config[5] = [list(row) for row in zip(*self.config[5])][::-1]
 
-        if direction == 'right':
+        elif direction == 'right':
             self.config[1][row], self.config[2][row], self.config[3][row], self.config[4][row] = face_4[row], face_1[row], face_2[row], face_3[row]
             if row == 0:
                 # counter-clockwise rotation for the top row
                 self.config[0] = ([list(row) for row in zip(*self.config[0])])[::-1]
-            if row == self.n - 1:
+            elif row == self.n - 1:
                 # clockwise rotation for the bottom row
                 self.config[5] = ([list(row) for row in zip(*reversed(self.config[5]))])
 
@@ -332,17 +332,17 @@ class Cube:
             if col == 0:
                 # counter-clockwise rotation for the left column
                 self.config[1] = [list(row) for row in zip(*self.config[1])][::-1]
-            if col == self.n - 1:
+            elif col == self.n - 1:
                 # clockwise rotation for the right column
                 self.config[3] = [list(row) for row in zip(*reversed(self.config[3]))]
 
-        if direction == 'down':
+        elif direction == 'down':
             for i in range(self.n):
                 self.config[0][i][col], self.config[2][i][col], self.config[5][i][col], self.config[4][i][col] = face_4[i][col], face_1[i][col], face_2[i][col], face_3[i][col]
             if col == 0:
                 # clockwise rotation for the left column
                 self.config[1] = [list(row) for row in zip(*reversed(self.config[1]))]
-            if col == self.n - 1:
+            elif col == self.n - 1:
                 # counter-clockwise rotation for the right column
                 self.config[3] = [list(row) for row in zip(*self.config[3])][::-1]
 
@@ -379,17 +379,17 @@ class Cube:
             if dpt == 0:
                 # clockwise rotation for the front face
                 self.config[2] = [list(row) for row in zip(*reversed(self.config[2]))]
-            if dpt == self.n - 1:
+            elif dpt == self.n - 1:
                 # counter-clockwise rotation for the back face
                 self.config[4] = [list(row) for row in zip(*self.config[4])][::-1]
     
-        if direction == 'negative':
+        elif direction == 'negative':
             for i in range(self.n):
                 self.config[0][-(dpt+1)][i], self.config[3][-(dpt+1)][i], self.config[5][-(dpt+1)][i], self.config[1][-(dpt+1)][i] = face_2[-(dpt+1)][i], face_3[-(dpt+1)][i], face_4[-(dpt+1)][i], face_1[-(dpt+1)][i] 
             if dpt == 0:
                 # counter-clockwise rotation for the front face
                 self.config[2] = [list(row) for row in zip(*self.config[2])][::-1]
-            if dpt == self.n - 1:
+            elif dpt == self.n - 1:
                 # clockwise rotation for the back face
                 self.config[4] = [list(row) for row in zip(*reversed(self.config[4]))]
         

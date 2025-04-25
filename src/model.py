@@ -46,35 +46,53 @@ class IDAStar(Model):
 
         cube = Cube(state=state)
 
-        if cube.complete():
-            return True
+        h_score = self.heuristic_(cube)
+        f_score = g_score + h_score
+        if f_score >= self.curr_threshold:
+            self.next_threshold = min(self.next_threshold, f_score)
+            return False
         else:
-            h_score = self.heuristic_(cube)
-            f_score = g_score + h_score
-            if f_score >= self.curr_threshold:
-                self.next_threshold = min(self.next_threshold, f_score)
-                return False
-            else:
-                random.shuffle(cube.actions)
-                for action in cube.actions:
-                    for i in range(cube.n):
-                        twist = action[0]
-                        move = action[1]
+            if cube.complete():
+                return True
+            next_moves = []
+            for action in cube.actions:
+                for i in range(cube.n):
+                    new_cube = Cube(state=state)
+                    twist = action[0]
+                    move = action[1]
 
-                        new_cube = Cube(state=cube.state)
-                        if twist == "horizontal":
-                            new_cube.horizontal_rotate(i, move)
-                        if twist == "vertical":
-                            new_cube.vertical_rotate(i, move)
-                        if twist == "side":
-                            new_cube.side_rotate(i, move)
-                        self.moves.append(((twist, i, move), new_cube.state))
-                        isSolved = self.search(new_cube.state, g_score+1)
-                        if isSolved:
-                            return True
-                        self.moves.pop()
-                        
-                return False
+                    # apply the move
+                    if twist == "horizontal":
+                        inverse_move = "right" if move == "left" else "left"
+                        if self.moves and self.moves[-1][0] == (twist, i, inverse_move):
+                            continue
+                        new_cube.horizontal_rotate(i, move)
+                    elif twist == "vertical":
+                        inverse_move = "down" if move == "up" else "up"
+                        if self.moves and self.moves[-1][0] == (twist, i, inverse_move):
+                            continue
+                        new_cube.vertical_rotate(i, move)
+                    elif twist == "side":
+                        inverse_move = "negative" if move == "positive" else "positive"
+                        if self.moves and self.moves[-1][0] == (twist, i, inverse_move):
+                            continue
+                        new_cube.side_rotate(i, move)
+
+                    # calculate the heuristic cost
+                    h_score = self.heuristic_(new_cube)
+                    f_score = g_score + h_score
+                    next_moves.append((f_score, (twist, i, move), new_cube.state))
+
+            sorted_moves = sorted(next_moves, key=lambda x: x[0])
+            
+            for _, (twist, i, move), new_state in sorted_moves:
+                self.moves.append(((twist, i, move), new_state))
+                isSolved = self.search(new_state, g_score+1)
+                if isSolved:
+                    return True
+                self.moves.pop()
+                    
+            return False
 
     def heuristic_(self, cube):
         """
