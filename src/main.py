@@ -1,6 +1,6 @@
 from cube import Cube
-from model import IDAStar
 from cost import Cost
+from model import IDAStar
 
 import os
 import json
@@ -40,10 +40,8 @@ cube = Cube(n=args.size)
 moves = cube.shuffle(args.shuffle_lower_bound, args.shuffle_upper_bound)
 
 n = len(moves)
-print(f"Shuffled state: {cube.state}")
-
 moves = "\n" + "\n".join([f"{move[0]}" for move in moves])
-print(f"Shuffled in {n} moves: {moves}")
+print(f"Shuffled in {n} moves. \nMoves:{moves}")
 
 s = time.perf_counter_ns()
 moves = model.solve(cube.state)
@@ -54,5 +52,7 @@ if moves:
     final_state = moves[-1][1]
 final_state = Cube(n=args.size).state
 
+print()
+
 moves = "\n" + "\n".join([f"{move[0]}" for move in moves])
-print(f"Solved in {n} in {(e-s)/1e6:.3f} ms with moves: {moves}")
+print(f"Solved in {n} moves in {(e-s)/1e6:.3f} ms.\nMoves:{moves}")

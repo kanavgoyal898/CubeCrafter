@@ -91,12 +91,11 @@ class Cube:
             str: Readable layout of all six cube faces with their respective color rows.
         """
 
-        result = []
-        for face_name, face_config in zip(self.faces, self.config):
-            result.append(f'{face_name} Face:')
-            result.extend([' '.join(row_config) for row_config in face_config])
-            result.append('')
-        return '\n' + '\n'.join(result)
+        s = f'{" " * (5 * self.n + 2)}'
+        l1 = '\n'.join(s + str(c) for c in self.config[0])
+        l2 = '\n'.join('  '.join(str(self.config[i][j]) for i in range(1, 5)) for j in range(self.n))
+        l3 = '\n'.join(s + str(c) for c in self.config[5])
+        return f'{l1}\n\n{l2}\n\n{l3}'
 
     def reset(self):
         """

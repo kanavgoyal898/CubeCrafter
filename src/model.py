@@ -1,9 +1,12 @@
 from cube import Cube
 
 import random
+
 class Model:
+
     def __init__(self):
         pass
+
 class IDAStar(Model):
     """
     Implements the Iterative Deepening A* (IDA*) search algorithm to solve a Rubik's Cube.
@@ -26,7 +29,6 @@ class IDAStar(Model):
         self.heuristic = heuristic
 
         self.moves = []
-        self.visited = set()
 
     def search(self, state, g_score):
         """
@@ -40,20 +42,22 @@ class IDAStar(Model):
             bool: True if the solution is found, False otherwise.
         """
 
-        if state in self.visited:
-            return False
-        self.visited.add(state)
-
         cube = Cube(state=state)
+
+        if len(self.moves) >= self.curr_threshold:
+            return False
 
         h_score = self.heuristic_(cube)
         f_score = g_score + h_score
-        if f_score >= self.curr_threshold:
+
+        if f_score > self.curr_threshold:
             self.next_threshold = min(self.next_threshold, f_score)
             return False
+        
         else:
             if cube.complete():
                 return True
+            
             next_moves = []
             for action in cube.actions:
                 for i in range(cube.n):
@@ -80,16 +84,18 @@ class IDAStar(Model):
 
                     # calculate the heuristic cost
                     h_score = self.heuristic_(new_cube)
-                    f_score = g_score + h_score
+                    f_score = (g_score + 1) + h_score
                     next_moves.append((f_score, (twist, i, move), new_cube.state))
 
-            sorted_moves = sorted(next_moves, key=lambda x: x[0])
+            sorted_moves = sorted(next_moves, key=lambda x: x[0], reverse=False)
             
-            for _, (twist, i, move), new_state in sorted_moves:
+            for f_score_, (twist, i, move), new_state in sorted_moves:
                 self.moves.append(((twist, i, move), new_state))
-                isSolved = self.search(new_state, g_score+1)
+
+                isSolved = self.search(new_state, g_score+f_score_)
                 if isSolved:
                     return True
+                
                 self.moves.pop()
                     
             return False
@@ -105,7 +111,7 @@ class IDAStar(Model):
             int: Heuristic cost estimate based on the heuristic database.
         """
         
-        return self.heuristic.get(cube.state, 0) if self.heuristic else 0
+        return self.heuristic.get(cube.state, self.max_threshold) if self.heuristic else self.max_threshold
     
     def solve(self, state):
         """
@@ -120,11 +126,10 @@ class IDAStar(Model):
 
         while True:
             isSolved = self.search(state, 0)
+
             if isSolved:
                 return self.moves
             else:
                 self.curr_threshold = self.next_threshold
-
                 self.moves = []
-                self.visited.clear()
                 self.next_threshold = float('inf')
