@@ -50,7 +50,8 @@ e = time.perf_counter_ns()
 n = len(moves)
 if moves:
     final_state = moves[-1][1]
-final_state = Cube(n=args.size).state
+else:
+    final_state = Cube(n=args.size).state
 
 print()
 
