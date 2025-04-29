@@ -9,13 +9,14 @@ import argparse
 
 parser = argparse.ArgumentParser(description="Solve a Rubik's Cube using IDA* algorithm.")
 parser.add_argument("--size", type=int, default=3, help="Size of the Rubik's Cube (default: 3).")
+parser.add_argument("--threshold", type=int, default=5, help="Threshold for heuristic database (default: 5).")
 parser.add_argument("--shuffle-lower-bound", type=int, default=1, help="Lower bound for shuffle moves (default: 1).")
 parser.add_argument("--shuffle-upper-bound", type=int, default=5, help="Upper bound for shuffle moves (default: 5).")
 
 args = parser.parse_args()
 
 db_directory = f"./database/cube_{args.size}x{args.size}x{args.size}/"
-db_file_path = db_directory + "heuristic.json"
+db_file_path = db_directory + f"heuristic.json"
 
 if not os.path.exists(db_directory):
     os.makedirs(db_directory)
@@ -27,7 +28,7 @@ if os.path.exists(db_file_path):
 
 if heuristic is None:
     print("Heuristic not found, building database...")
-    cost = Cost(n=args.size, max_depth=5)
+    cost = Cost(n=args.size, max_depth=args.threshold)
     heuristic = cost.heuristic
     with open(db_file_path, "w") as f:
         json.dump(heuristic, f, ensure_ascii=False, indent=4)

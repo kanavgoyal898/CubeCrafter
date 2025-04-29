@@ -57,7 +57,8 @@ class IDAStar(Model):
         next_moves = []
         for action in cube.actions:
             for i in range(cube.n):
-                new_cube = Cube(state=state)
+                new_cube = Cube(state=cube.state)
+
                 twist = action[0]
                 move = action[1]
 
@@ -106,8 +107,30 @@ class IDAStar(Model):
         Returns:
             int: Heuristic cost estimate based on the heuristic database.
         """
+
+        def simpler_heuristic_(cube):
+            """
+            Calculates the number of misplaced pieces on the Rubik's Cube for a simple heuristic.
+
+            Args:
+                cube (Cube): An instance of the Cube class representing the current state of the Rubik's Cube.
+                            The Cube class should have the attributes `config` (the current configuration of the cube)
+
+            Returns:
+                int: The number of misplaced pieces across all faces of the cube.
+            """
+
+            misplaced_pieces = 0
+            for k in range(6):
+                face_color = cube.config[k][cube.n // 2][cube.n // 2]
+                for i in range(cube.n):
+                    for j in range(cube.n):
+                        if cube.config[k][i][j] != face_color:
+                            misplaced_pieces += 1
+            
+            return misplaced_pieces
         
-        return self.heuristic.get(cube.state, self.max_threshold) if self.heuristic else self.max_threshold
+        return self.heuristic.get(cube.state, simpler_heuristic_(cube)) if self.heuristic else simpler_heuristic_(cube)
     
     def solve(self, state):
         """
