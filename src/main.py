@@ -9,9 +9,8 @@ import argparse
 
 parser = argparse.ArgumentParser(description="Solve a Rubik's Cube using IDA* algorithm.")
 parser.add_argument("--size", type=int, default=3, help="Size of the Rubik's Cube (default: 3).")
-parser.add_argument("--threshold", type=int, default=20, help="Maximum search depth for heuristic generation (default: 20).")
-parser.add_argument("--shuffle_lower_bound", type=int, default=1, help="Lower bound for shuffle moves (default: 1).")
-parser.add_argument("--shuffle_upper_bound", type=int, default=5, help="Upper bound for shuffle moves (default: 5).")
+parser.add_argument("--shuffle-lower-bound", type=int, default=1, help="Lower bound for shuffle moves (default: 1).")
+parser.add_argument("--shuffle-upper-bound", type=int, default=5, help="Upper bound for shuffle moves (default: 5).")
 
 args = parser.parse_args()
 
@@ -33,7 +32,7 @@ if heuristic is None:
     with open(db_file_path, "w") as f:
         json.dump(heuristic, f, ensure_ascii=False, indent=4)
 
-model = IDAStar(threshold=args.threshold, heuristic=heuristic)
+model = IDAStar(heuristic=heuristic)
 
 cube = Cube(n=args.size)
 
