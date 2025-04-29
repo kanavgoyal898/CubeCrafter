@@ -38,12 +38,12 @@ class Cost:
 
         queue = [(cube.state, 0)]
         heuristic = {cube.state: 0}
-        max_node_count = sum([(len(cube.actions) * cube.n) ** (i+1) for i in range(self.max_depth+1)])
+        max_node_count = sum([(len(cube.actions) * cube.n) ** (i) for i in range(self.max_depth+1)])
 
         with tqdm.tqdm(total=max_node_count, desc="Heuristic Database") as progress_bar:
             while queue:
                 state, depth = queue.pop()
-                if depth > self.max_depth:
+                if depth >= self.max_depth:
                     continue
 
                 for action in cube.actions:
@@ -60,13 +60,11 @@ class Cost:
                             new_cube.side_rotate(i, move)
 
                         if new_cube.state not in heuristic:
-                            heuristic[new_cube.state] = depth + 1
+                            heuristic[new_cube.state] = depth + 1 if not new_cube.complete() else 0
+                        
+                        heuristic[new_cube.state] = min(heuristic[new_cube.state], depth + 1)
 
-                        if heuristic[new_cube.state] > depth + 1:
-                            heuristic[new_cube.state] = depth + 1
-
-                        if new_cube.state not in queue:
-                            queue.append((new_cube.state, depth + 1))
+                        queue.append((new_cube.state, depth + 1))
                         progress_bar.update(1)
 
         return heuristic
