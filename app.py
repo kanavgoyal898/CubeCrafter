@@ -4,9 +4,13 @@ from src.cube import Cube
 from src.cost import Cost
 from src.model import Model, IDAStar
 
+import os
+import json
+
 app = Flask(__name__)
 
 DEFAULT_SIZE = 3
+DEFAULT_MAX_DEPTH = 5
 DEFAULT_LOWER_STEP_LIMIT = 1
 DEFAULT_UPPER_STEP_LIMIT = 5
 
@@ -49,7 +53,28 @@ def solve():
     shuffle_moves = cube.shuffle(steps_low, steps_high)
     print(f"Shuffled in {len(shuffle_moves)} moves.")
 
-    return render_template('solve.html', size=size, cube=cube, shuffle_moves=shuffle_moves)
+    db_directory = f"./database/cube_{size}x{size}x{size}/"
+    db_file_path = db_directory + f"heuristic.json"
+
+    if not os.path.exists(db_directory):
+        os.makedirs(db_directory)
+
+    heuristic = None
+    if os.path.exists(db_file_path):
+        with open(db_file_path, "r") as f:
+            heuristic = json.load(f)
+
+    if heuristic is None:
+        print("Heuristic not found, building database...")
+        cost = Cost(n=size, max_depth=DEFAULT_MAX_DEPTH)
+        heuristic = cost.heuristic
+        with open(db_file_path, "w") as f:
+            json.dump(heuristic, f, ensure_ascii=False, indent=4)
+
+    model = IDAStar(heuristic=heuristic)
+    solve_moves = model.solve(cube.state)
+
+    return render_template('solve.html', size=size, cube=cube, shuffle_moves=shuffle_moves, solve_moves=solve_moves)
 
 if __name__ == '__main__':
     app.run(debug=True)
