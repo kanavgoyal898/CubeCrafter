@@ -1,0 +1,23 @@
+{% macro render(cube, size) %}
+    <div class="flex flex-col items-center gap-4 mt-8">
+        <div class="flex flex-row justify-center gap-4">
+            <!-- UP, LEFT, FRONT, RIGHT, BACK, DOWN -->
+            {% set order = ['UP', 'LEFT', 'FRONT', 'RIGHT', 'BACK', 'DOWN'] %}
+            {% set color_map = { 'W': 'bg-black dark:bg-white', 'G': 'bg-green-500', 'O': 'bg-orange-500', 'B': 'bg-blue-500', 'R': 'bg-red-500', 'Y': 'bg-yellow-500' } %}
+            {% for k in range(6) %}
+                <div class="flex flex-col items-center">
+                    <div class="grid gap-2" style="grid-template-columns: repeat({{ size }}, 2em);">
+                        {% for i in range(size) %}
+                            {% for j in range(size) %}
+                                <div class="w-8 h-8 {{ color_map[cube.config[k][i][j]] }}"></div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <p class="text-center text-lg text-bold text-black dark:text-white mt-4">{{ order[k] }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}

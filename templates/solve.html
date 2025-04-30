@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% if cube %}
+        {% import 'cube.html' as cube_template %}
+        {{ cube_template.render(cube, size) }}
+        <div class="text-lime-700 dark:text-lime-300 text-lg text-bold mt-8">
+            Shuffled in {{ shuffle_moves | length }} moves.
+        </div>
+    {% endif %}
+
+{% endblock %}
