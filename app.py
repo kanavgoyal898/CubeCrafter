@@ -46,9 +46,9 @@ def solve():
     steps_low = int(request.form.get('lower-limit', DEFAULT_LOWER_STEP_LIMIT))
     steps_high = int(request.form.get('upper-limit', DEFAULT_UPPER_STEP_LIMIT))
 
-    if steps_low < 1 or steps_high > 100 or steps_low > steps_high:
+    if steps_low < 1 or steps_high > 10 or steps_low > steps_high:
         print("Error: Number of steps out of bounds.")
-        return render_template('solve.html', error="Number of steps out of bounds. Choose a number between 1 and 100.")
+        return render_template('solve.html', error="Number of steps out of bounds. Choose a number between 1 and 10.")
     
     shuffle_moves = cube.shuffle(steps_low, steps_high)
 

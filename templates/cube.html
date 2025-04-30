@@ -1,6 +1,6 @@
 {% macro render(cube, size) %}
-    <div class="flex flex-col items-center gap-4 mt-8">
-        <div class="flex flex-row justify-center gap-4">
+    <div class="flex flex-col items-center gap-4 mt-8 mx-8">
+        <div class="flex flex-row flex-wrap justify-center gap-4">
             <!-- UP, LEFT, FRONT, RIGHT, BACK, DOWN -->
             {% set order = ['UP', 'LEFT', 'FRONT', 'RIGHT', 'BACK', 'DOWN'] %}
             {% set color_map = { 'W': 'bg-black dark:bg-white', 'G': 'bg-green-500', 'O': 'bg-orange-500', 'B': 'bg-blue-500', 'R': 'bg-red-500', 'Y': 'bg-yellow-500' } %}
