@@ -1,4 +1,4 @@
-from cube import Cube
+from src.cube import Cube
 
 import tqdm
 

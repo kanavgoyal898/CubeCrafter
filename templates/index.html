@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CubeCrafter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 dark:bg-slate-900 flex flex-col items-center justify-start">
+    <h1 class="text-center text-4xl text-bold dark:text-white font-bold my-4">CubeCrafter</h1>
+
+    <form action="/" method="POST" class="flex flex-row gap-2">
+        <input type="text" name="size" value="{{ size if size else default_size }}" required class="bg-slate-50 dark:bg-slate-950 text-black dark:text-white px-4 py-2 rounded-full">
+        <button type="submit" class="bg-amber-400 dark:bg-amber-600 text-black dark:text-white px-4 py-2 rounded-full">
+            Generate
+        </button>
+    </form>
+
+    {% if cube %}
+    <div class="flex flex-col items-center gap-4 mt-8">
+        <div class="flex justify-center gap-4">
+            <!-- UP, LEFT, FRONT, RIGHT, BACK, DOWN -->
+            {% for face in range(6) %}
+                <div class="grid gap-2" style="grid-template-columns: repeat({{ size }}, 4em);">
+                    {% for i in range(size) %}
+                        {% for j in range(size) %}
+                            <div class="w-16 h-16 bg-black dark:bg-white"></div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</body>
+</html>

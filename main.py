@@ -1,6 +1,6 @@
-from cube import Cube
-from cost import Cost
-from model import IDAStar
+from src.cube import Cube
+from src.cost import Cost
+from src.model import IDAStar
 
 import os
 import json
