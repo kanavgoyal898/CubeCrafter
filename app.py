@@ -48,7 +48,7 @@ def solve():
 
     if steps_low < 1 or steps_high > 10 or steps_low > steps_high:
         print("Error: Number of steps out of bounds.")
-        return render_template('solve.html', error="Number of steps out of bounds. Choose a number between 1 and 10.")
+        return render_template('index.html', error="Number of steps out of bounds. Choose a number between 1 and 10.")
     
     shuffle_moves = cube.shuffle(steps_low, steps_high)
 
