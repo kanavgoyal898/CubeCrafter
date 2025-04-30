@@ -5,12 +5,29 @@
     {% if cube %}
         {% import 'cube.html' as cube_template %}
         {{ cube_template.render(cube, size) }}
-        <div class="text-lime-700 dark:text-lime-300 text-lg text-bold mt-8">
-            Shuffled in {{ shuffle_moves | length }} moves.
+
+        <div class="flex flex-row items-start gap-8 mt-8">
+            <div class="flex flex-col items-center">
+                <div class="text-lime-700 dark:text-lime-300 text-lg text-bold mb-4">
+                    Shuffled in {{ shuffle_moves | length }} moves.
+                </div>
+                {% import 'moves.html' as cube_template %}
+                {{ cube_template.render(cube, shuffle_moves) }}
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="text-fuchsia-700 dark:text-fuchsia-300 text-lg text-bold mb-4">
+                    Solved in {{ solve_moves | length }} moves.
+                </div>
+                {% import 'moves.html' as cube_template %}
+                {{ cube_template.render(cube, solve_moves) }}
+            </div>
         </div>
-        <div class="text-fuchsia-700 dark:text-fuchsia-300 text-lg text-bold mt-8">
-            Solved in {{ solve_moves | length }} moves.
-        </div>
+
+        <form action="/" class="flex flex-row mt-8">
+            <button class="bg-amber-400 dark:bg-amber-600 text-black dark:text-white px-4 py-2 rounded-full">
+                Restart
+            </button>
+        </form>
     {% endif %}
 
 {% endblock %}

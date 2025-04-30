@@ -1,0 +1,22 @@
+{% macro render(cube, moves) %}
+    <div class="flex justify-center text-black dark:text-white space-x-2">
+        <table class="table-auto border-collapse">
+            <thead class="bg-slate-200 dark:bg-slate-800">
+                <tr>
+                    <th class="px-4 py-2">Direction</th>
+                    <th class="px-4 py-2">Row</th>
+                    <th class="px-4 py-2">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for move in moves %}
+                    <tr class="{{ loop.index % 2 == 0 and 'bg-slate-50 dark:bg-slate-950' or 'bg-slate-100 dark:bg-slate-900' }}">
+                        <td class="px-4 py-2">{{ move[0][0] }}</td>
+                        <td class="px-4 py-2">{{ move[0][1] + 1 }}</td>
+                        <td class="px-4 py-2">{{ move[0][2] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endmacro %}

@@ -51,7 +51,6 @@ def solve():
         return render_template('solve.html', error="Number of steps out of bounds. Choose a number between 1 and 100.")
     
     shuffle_moves = cube.shuffle(steps_low, steps_high)
-    print(f"Shuffled in {len(shuffle_moves)} moves.")
 
     db_directory = f"./database/cube_{size}x{size}x{size}/"
     db_file_path = db_directory + f"heuristic.json"
