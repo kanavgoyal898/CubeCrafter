@@ -21,7 +21,10 @@ def index():
     default_size = DEFAULT_SIZE
 
     if request.method == 'POST':
-        size = int(request.form.get('size', default_size))
+        size = request.form.get('size', default_size)
+        if not str.isdigit(size):
+            return render_template('index.html', error="Invalid input. Please enter a valid number.")
+        size = int(size)
 
         if size < 1 or size > 6:
             print("Error: Cube size too large.")

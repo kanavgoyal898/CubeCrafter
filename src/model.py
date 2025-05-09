@@ -47,6 +47,9 @@ class IDAStar(Model):
         h_score = self.heuristic_(cube)
         f_score = g_score + h_score
 
+        if self.max_threshold < len(self.moves):
+            return False
+
         if f_score > self.curr_threshold:
             self.next_threshold = min(self.next_threshold, f_score)
             return False
