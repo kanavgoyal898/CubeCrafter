@@ -1,6 +1,7 @@
 # CubeCrafter Cube Engine
 
-CubeCrafter is a Python-based Rubik's Cube simulation and solving engine that implements advanced algorithms to efficiently solve Rubik's Cubes of different dimensions. This library provides a comprehensive solution for creating, manipulating, and solving Rubik's Cubes using state-of-the-art search algorithms and heuristics.
+CubeCrafter is a Python-based Rubik's Cube simulation and solving engine that implements advanced algorithms to efficiently solve Rubik's Cubes of different dimensions. This library provides a comprehensive solution for creating, manipulating, and solving Rubik's Cubes using state-of-the-art search algorithms and heuristics. You can download the pre-computed heuristic database from this [Google Drive](https://drive.google.com/drive/folders/1XROvL34yHTCx2jPAAEG6xaKqvH_rf17G?usp=sharing) folder.
+
 
 <div style="text-align: center;">
   <img src="./image.png" alt="CubeCrafter Cube Engine" style="width: 100%;">
